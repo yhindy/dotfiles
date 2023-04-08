@@ -1,3 +1,10 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # If you come from bash you might have to change your $PATH.
 export PATH=/usr/local/Cellar:$PATH
 
@@ -54,36 +61,36 @@ plugins=(git)
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="powerlevel9k/powerlevel9k"
-POWERLEVEL9K_DIR_DEFAULT_BACKGROUND='red'
-POWERLEVEL9K_DIR_DEFAULT_FOREGROUND='089'
+ZSH_THEME="powerlevel10k/powerlevel10k"
+POWERLEVEL10K_DIR_DEFAULT_BACKGROUND='red'
+POWERLEVEL10K_DIR_DEFAULT_FOREGROUND='089'
 if [[ -n $SSH_CONNECTION ]]; then
-    POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(host dir rbenv virtualenv anaconda vcs)
+    POWERLEVEL10K_LEFT_PROMPT_ELEMENTS=(host dir rbenv virtualenv anaconda vcs)
 else
-    POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir rbenv virtualenv anaconda vcs)
+    POWERLEVEL10K_LEFT_PROMPT_ELEMENTS=(dir rbenv virtualenv anaconda vcs)
 fi
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(root_indicator status history time)
+POWERLEVEL10K_RIGHT_PROMPT_ELEMENTS=(root_indicator status history time)
 
-POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
-POWERLEVEL9K_SHORTEN_DELIMITER=""
-POWERLEVEL9K_SHORTEN_STRATEGY="truncate_from_right"
-POWERLEVEL9K_HIDE_BRANCH_ICON=true
-POWERLEVEL9K_VCS_HIDE_TAGS=true
-POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
-POWERLEVEL9K_SSH_ICON=""
-POWERLEVEL9K_STATUS_CROSS=true
+POWERLEVEL10K_SHORTEN_DIR_LENGTH=2
+POWERLEVEL10K_SHORTEN_DELIMITER=""
+POWERLEVEL10K_SHORTEN_STRATEGY="truncate_from_right"
+POWERLEVEL10K_HIDE_BRANCH_ICON=true
+POWERLEVEL10K_VCS_HIDE_TAGS=true
+POWERLEVEL10K_PROMPT_ADD_NEWLINE=true
+POWERLEVEL10K_SSH_ICON=""
+POWERLEVEL10K_STATUS_CROSS=true
 
-POWERLEVEL9K_DIR_HOME_BACKGROUND='red'
-POWERLEVEL9K_DIR_HOME_FOREGROUND='089'
-POWERLEVEL9K_DIR_HOME_SUBFOLDER_BACKGROUND='red'
-POWERLEVEL9K_DIR_HOME_SUBFOLDER_FOREGROUND='089'
-POWERLEVEL9K_HOST_REMOTE_BACKGROUND='blue'
-POWERLEVEL9K_HOST_REMOTE_FOREGROUND='018'
-POWERLEVEL9K_HOST_LOCAL_BACKGROUND='blue'
-POWERLEVEL9K_HOST_LOCAL_FOREGROUND='018'
-POWERLEVEL9K_VIRTUALENV_BACKGROUND='140'
-POWERLEVEL9K_ANACONDA_BACKGROUND='140'
-POWERLEVEL9K_RBENV_BACKGROUND='140'
+POWERLEVEL10K_DIR_HOME_BACKGROUND='red'
+POWERLEVEL10K_DIR_HOME_FOREGROUND='089'
+POWERLEVEL10K_DIR_HOME_SUBFOLDER_BACKGROUND='red'
+POWERLEVEL10K_DIR_HOME_SUBFOLDER_FOREGROUND='089'
+POWERLEVEL10K_HOST_REMOTE_BACKGROUND='blue'
+POWERLEVEL10K_HOST_REMOTE_FOREGROUND='018'
+POWERLEVEL10K_HOST_LOCAL_BACKGROUND='blue'
+POWERLEVEL10K_HOST_LOCAL_FOREGROUND='018'
+POWERLEVEL10K_VIRTUALENV_BACKGROUND='140'
+POWERLEVEL10K_ANACONDA_BACKGROUND='140'
+POWERLEVEL10K_RBENV_BACKGROUND='140'
 
 source $ZSH/oh-my-zsh.sh
 
@@ -165,3 +172,6 @@ alias drmi='docker rmi'
 function error() {
   (>&2 echo -e "${RED}$*${NO_COLOR}")
 }
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

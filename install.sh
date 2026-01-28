@@ -61,6 +61,17 @@ cd "$DOTFILES_DIR"
 chmod +x setup.sh
 ./setup.sh
 
+# Install Vundle for vim plugins
+VUNDLE_DIR="$HOME/.vim/bundle/Vundle.vim"
+if [ ! -d "$VUNDLE_DIR" ]; then
+  echo "Installing Vundle..."
+  git clone https://github.com/VundleVim/Vundle.vim.git "$VUNDLE_DIR"
+fi
+
+# Install vim plugins
+echo "Installing vim plugins..."
+vim +PluginInstall +qall 2>/dev/null || true
+
 # Install optional tools
 echo ""
 echo "Optional: install fzf and fd for better search"

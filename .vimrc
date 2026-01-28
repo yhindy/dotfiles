@@ -81,8 +81,13 @@ filetype plugin indent on    " required
 set statusline+=%#warningmsg#
 set statusline+=%*
 
-let g:python_host_prog = '/Users/kimberli/miniconda3/envs/python2/bin/python'
-let g:python3_host_prog = '/Users/kimberli/miniconda3/envs/python3/bin/python'
+" Python paths for neovim (auto-detect)
+if executable('python3')
+  let g:python3_host_prog = exepath('python3')
+endif
+if executable('python')
+  let g:python_host_prog = exepath('python')
+endif
 
 " vim-terraform
 let g:terraform_align = 1
@@ -303,4 +308,3 @@ function! HasPaste()
 endfunction
 set runtimepath^=~/.vim runtimepath+=~/.vim/after
 let &packpath = &runtimepath
-source ~/.vimrc

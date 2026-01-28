@@ -72,13 +72,31 @@ fi
 echo "Installing vim plugins..."
 vim +PluginInstall +qall 2>/dev/null || true
 
-# Install optional tools
-echo ""
-echo "Optional: install fzf and fd for better search"
-if command -v apt-get &> /dev/null; then
-  echo "  sudo apt-get install fzf fd-find"
-elif command -v brew &> /dev/null; then
-  echo "  brew install fzf fd"
+# Install fzf and fd
+if ! command -v fzf &> /dev/null; then
+  echo "Installing fzf..."
+  if command -v apt-get &> /dev/null; then
+    sudo apt-get install -y fzf
+  elif command -v yum &> /dev/null; then
+    sudo yum install -y fzf
+  elif command -v brew &> /dev/null; then
+    brew install fzf
+  else
+    # Fallback: install from git
+    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+    ~/.fzf/install --all --no-bash --no-fish
+  fi
+fi
+
+if ! command -v fd &> /dev/null && ! command -v fdfind &> /dev/null; then
+  echo "Installing fd..."
+  if command -v apt-get &> /dev/null; then
+    sudo apt-get install -y fd-find
+  elif command -v yum &> /dev/null; then
+    sudo yum install -y fd-find
+  elif command -v brew &> /dev/null; then
+    brew install fd
+  fi
 fi
 
 echo ""

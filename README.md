@@ -8,22 +8,15 @@ Config files for zsh, vim, tmux, and git.
 curl -fsSL https://raw.githubusercontent.com/yhindy/dotfiles/master/install.sh | bash
 ```
 
-This installs everything: zsh, oh-my-zsh, powerlevel10k, plugins, and symlinks configs.
+This installs everything:
+- zsh, oh-my-zsh, powerlevel10k, plugins
+- fzf and fd (for `Ctrl+R` history search, `Ctrl+G` directory jump)
+- Vundle + vim plugins
+- Symlinks all configs
 
 For manual setup or to update existing install:
 ```bash
 git clone https://github.com/yhindy/dotfiles.git ~/.dotfiles && cd ~/.dotfiles && ./setup.sh
-```
-
-### Optional Tools
-
-For better search (`Ctrl+R`, `Ctrl+G`):
-```bash
-# Ubuntu/Debian
-sudo apt-get install fzf fd-find
-
-# macOS
-brew install fzf fd
 ```
 
 ### What's Included

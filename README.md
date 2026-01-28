@@ -5,20 +5,26 @@ Config files for zsh, vim, tmux, and git.
 ### Quick Setup (VPS/New Machine)
 
 ```bash
-git clone https://github.com/yhindy/dotfiles.git ~/.dotfiles && cd ~/.dotfiles && chmod +x setup.sh && ./setup.sh
+curl -fsSL https://raw.githubusercontent.com/yhindy/dotfiles/master/install.sh | bash
 ```
 
-This clones the repo to `~/.dotfiles` and symlinks configs to your home directory.
+This installs everything: zsh, oh-my-zsh, powerlevel10k, plugins, and symlinks configs.
 
-### Prerequisites
+For manual setup or to update existing install:
+```bash
+git clone https://github.com/yhindy/dotfiles.git ~/.dotfiles && cd ~/.dotfiles && ./setup.sh
+```
 
-For full functionality, install:
-- [oh-my-zsh](https://ohmyz.sh/)
-- [powerlevel10k](https://github.com/romkatv/powerlevel10k) theme
-- [zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting)
-- [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions)
-- [fzf](https://github.com/junegunn/fzf) (optional, for better Ctrl+R)
-- [fd](https://github.com/sharkdp/fd) (optional, for fzf file finding)
+### Optional Tools
+
+For better search (`Ctrl+R`, `Ctrl+G`):
+```bash
+# Ubuntu/Debian
+sudo apt-get install fzf fd-find
+
+# macOS
+brew install fzf fd
+```
 
 ### What's Included
 

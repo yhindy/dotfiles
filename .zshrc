@@ -6,13 +6,18 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 # If you come from bash you might have to change your $PATH.
-export PATH=/usr/local/Cellar:$PATH
+# Homebrew paths (macOS only)
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  export PATH=/usr/local/Cellar:$PATH
+fi
 
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
 export LANG="en_US.UTF-8"
 export LC_CTYPE="en_US.UTF-8"
+
+
 
 RED='\033[0;31m'
 YELLOW='\e[33m'
@@ -56,7 +61,11 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+plugins=(
+  git 
+  zsh-syntax-highlighting
+  zsh-autosuggestions
+)
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -111,11 +120,21 @@ export SSH_KEY_PATH="~/.ssh/rsa_id"
 export FZF_DEFAULT_COMMAND='fd --type f'
 
 # Custom
-unsetopt share_history
-bindkey -v
+setopt APPEND_HISTORY             # Appends new history to the history file, not overwriting it.
+setopt SHARE_HISTORY              # Shares the history across all sessions.
+setopt INC_APPEND_HISTORY         # Writes history incrementally to the history file.
 bindkey '^[OA' up-line-or-beginning-search
 bindkey '^[OB' down-line-or-beginning-search
-
+bindkey '^[[1;9D' backward-word
+bindkey '^[[1;3D' backward-word
+bindkey '^[[1;3C' forward-word
+bindkey '^[D' backward-word
+bindkey '^[C' forward-word
+bindkey '^[[1;9C' forward-word
+bindkey '^R' history-incremental-search-backward
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey '^X^E' edit-command-line
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
@@ -136,10 +155,19 @@ alias rgl="rg -lS"
 alias l="ls -lh"
 alias ll="ls -alG"
 
-alias chrm='open -a "Google Chrome"'
-alias subl='open -a "Sublime Text"'
-alias atom='open -a "Atom"'
-alias mktex='cp ~/template.tex'
+alias crd="claude --resume --dangerously-skip-permissions"
+alias cr="claude --resume"
+alias c="claude"
+
+alias clawdbot='ssh root@76.13.107.55'
+
+# macOS-specific aliases
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  alias chrm='open -a "Google Chrome"'
+  alias subl='open -a "Sublime Text"'
+  alias atom='open -a "Atom"'
+  alias mktex='cp ~/template.tex'
+fi
 alias pynb='jupyter notebook'
 alias server='python -m http.server'
 
@@ -147,21 +175,32 @@ alias gds='git diff --staged'
 alias gl='glol'
 alias gpt='git push --tags'
 alias gpf='git push --force-with-lease'
+alias gphm='git push heroku main'
 alias gu='git pull --rebase'
 alias gs='git status'
-alias gh='git stash'
+alias gsh='git stash'
 alias ghp='git stash pop'
 alias gcm='git commit -m'
+alias gca='git commit --amend --no-edit'
 alias gk='git checkout'
 alias gr='git rebase'
 alias gri='git rebase --interactive'
 alias grc='git rebase --continue'
 alias gts='git tag -l'
 alias gta='git tag -a'
+alias gap='git add -p'
+alias gsh='git stash'
+alias gsp='git stash pop'
 
 alias tl='tmux ls'
-alias tc='tmux -CC'
-alias ta='tmux -CC attach -t'
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  # iTerm2 tmux integration
+  alias tc='tmux -CC'
+  alias ta='tmux -CC attach -t'
+else
+  alias tc='tmux'
+  alias ta='tmux attach -t'
+fi
 
 alias dps='docker ps -a'
 alias dk='docker kill'
@@ -173,5 +212,50 @@ function error() {
   (>&2 echo -e "${RED}$*${NO_COLOR}")
 }
 
+sub() {
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    find . -type f -exec sed -i '' "s/$1/$2/g" {} +
+  else
+    find . -type f -exec sed -i "s/$1/$2/g" {} +
+  fi
+}
+
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# >>> conda initialize >>>
+# Check common conda locations
+if [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
+    . "$HOME/miniconda3/etc/profile.d/conda.sh"
+elif [ -f "$HOME/anaconda3/etc/profile.d/conda.sh" ]; then
+    . "$HOME/anaconda3/etc/profile.d/conda.sh"
+elif [ -f "/opt/conda/etc/profile.d/conda.sh" ]; then
+    . "/opt/conda/etc/profile.d/conda.sh"
+elif [ -d "$HOME/miniconda3/bin" ]; then
+    export PATH="$HOME/miniconda3/bin:$PATH"
+fi
+# <<< conda initialize <<<
+
+source ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+[ -f ~/.secrets ] && source ~/.secrets
+[ -f ~/.lazyshell.zsh ] && source ~/.lazyshell.zsh
+
+# fzf shell integration (better Ctrl+R history search)
+if command -v fzf &> /dev/null; then
+  eval "$(fzf --zsh)"
+  bindkey '^G' fzf-cd-widget
+fi
+
+# macOS-specific paths (Homebrew, etc.)
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
+  export PATH="$HOME/code/flutter/bin:$PATH"
+  export PATH="$PATH":"$HOME/.pub-cache/bin"
+  export JAVA_HOME=$(/usr/libexec/java_home -v 21 2>/dev/null)
+  [ -n "$JAVA_HOME" ] && export PATH="$JAVA_HOME/bin:$PATH"
+  export JAVA_HOME="/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home"
+  export PATH="/opt/homebrew/opt/openjdk@21/bin:$PATH"
+fi
+
+# Common paths
+export PATH="$HOME/.local/bin:$PATH"

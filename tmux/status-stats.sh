@@ -58,10 +58,18 @@ esac
 disk=$(df -P / 2>/dev/null | awk 'NR==2 {gsub(/%/, "", $5); print $5}')
 
 # Icons instead of CPU/MEM/DISK labels — buys back ~12 columns on a split pane.
-# All three have inherent emoji presentation, so tmux measures them as 2 columns;
-# don't swap in an icon that needs a U+FE0F variation selector (see .tmux.conf).
+# These are Nerd Font glyphs (p10k is already configured for nerdfont-complete),
+# NOT color emoji: emoji are drawn from a separate font whose glyphs are taller
+# than a terminal cell, so they bleed over the top of the status bar. Set
+# TMUX_STATUS_ICONS=text in the environment if a box appears instead of a glyph.
 #
 # Every field is padded to a fixed width. status-right is right-aligned, so a
 # value that grows a digit (9% -> 13%) would otherwise shove every icon to its
 # left one column sideways on each refresh.
-printf '💻 %3s%% │ 🧠 %s │ 💾 %3s%%' "$cpu" "$mem" "${disk:---}"
+case "${TMUX_STATUS_ICONS:-nerd}" in
+  text) i_cpu="CPU"; i_mem="MEM"; i_disk="DISK" ;;
+  *)    i_cpu=""; i_mem=""; i_disk="" ;;
+esac
+
+printf '%s %3s%% │ %s %s │ %s %3s%%' \
+  "$i_cpu" "$cpu" "$i_mem" "$mem" "$i_disk" "${disk:---}"

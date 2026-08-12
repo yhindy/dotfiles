@@ -57,4 +57,7 @@ esac
 
 disk=$(df -P / 2>/dev/null | awk 'NR==2 {gsub(/%/, "", $5); print $5}')
 
-printf 'CPU %s%% │ MEM %s │ DISK %s%%' "$cpu" "$mem" "${disk:---}"
+# Icons instead of CPU/MEM/DISK labels — buys back ~12 columns on a split pane.
+# All three have inherent emoji presentation, so tmux measures them as 2 columns;
+# don't swap in an icon that needs a U+FE0F variation selector (see .tmux.conf).
+printf '💻 %s%% │ 🧠 %s │ 💾 %s%%' "$cpu" "$mem" "${disk:---}"

@@ -33,7 +33,7 @@ cpu_macos() {
 
 mem_linux() {
   awk '/^MemTotal:/{t=$2} /^MemAvailable:/{a=$2}
-       END {printf "%.1f/%.0fG", (t-a)/1048576, t/1048576}' /proc/meminfo
+       END {printf "%4.1f/%.0fG", (t-a)/1048576, t/1048576}' /proc/meminfo
 }
 
 mem_macos() {
@@ -46,7 +46,7 @@ mem_macos() {
     END {
       gsub(/\./, "", act); gsub(/\./, "", wir); gsub(/\./, "", cmp)
       used = (act + wir + cmp) * ps
-      printf "%.1f/%.0fG", used / 1073741824, total / 1073741824
+      printf "%4.1f/%.0fG", used / 1073741824, total / 1073741824
     }'
 }
 
@@ -60,4 +60,8 @@ disk=$(df -P / 2>/dev/null | awk 'NR==2 {gsub(/%/, "", $5); print $5}')
 # Icons instead of CPU/MEM/DISK labels — buys back ~12 columns on a split pane.
 # All three have inherent emoji presentation, so tmux measures them as 2 columns;
 # don't swap in an icon that needs a U+FE0F variation selector (see .tmux.conf).
-printf '💻 %s%% │ 🧠 %s │ 💾 %s%%' "$cpu" "$mem" "${disk:---}"
+#
+# Every field is padded to a fixed width. status-right is right-aligned, so a
+# value that grows a digit (9% -> 13%) would otherwise shove every icon to its
+# left one column sideways on each refresh.
+printf '💻 %3s%% │ 🧠 %s │ 💾 %3s%%' "$cpu" "$mem" "${disk:---}"
